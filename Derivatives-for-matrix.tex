@@ -1,0 +1,525 @@
+%使用xelatex编译
+%-------导言区----------------
+\documentclass[UTF8,space=auto]{ctexart} %UTF8编码，设置其处理空格的方式为auto
+\usepackage[a4paper]{geometry} %设置纸张为A4大小
+\usepackage{hyperref} %可使用超链接(含链接的跳转和一些命令)
+\usepackage{amsmath} %最常用的数学宏包
+\usepackage{amssymb} %包含更多的数学符号
+\usepackage{lipsum} %英语假文宏包
+\usepackage{ifthen} %使用\ifthenelse命令
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fancyhdr} %设置页眉页脚的宏包
+\usepackage{bm}
+
+%超链接设置(依赖于hyperref宏包)
+\hypersetup{
+	colorlinks=true,
+	citecolor=magenta,%设置cite类命令超链接的颜色
+	linkcolor=blue,%设置目录、脚注、ref等超链接的颜色
+	urlcolor=violet,%设置网页超链接的颜色
+}
+
+%ctex宏包的设置
+%\ctexset{
+%	section = {
+%		format+ = {\raggedright} %节标题左对齐
+%	}
+%}
+
+%页眉页脚的设置 (依赖于fancyhdr宏包)
+\pagestyle{fancy} %使用fancy风格
+\fancyhf{} %清除所有的页眉页脚
+\fancyhead[L]{\slshape\leftmark} %页眉RE、LO位置章标题
+\fancyhead[R]{\slshape\rightmark} %页眉LE、RO位置节标题
+\fancyfoot[C]{\thepage} %页脚居中页码
+\renewcommand{\headrulewidth}{0.4pt} %重定义页眉线宽度
+%\renewcommand{\footrulewidth}{0.4pt} %重定义页脚线宽度
+
+%定义新命令或新运算符
+\DeclareMathOperator{\diff}{d\!}
+\newcommand{\var}{\mathrm{Var}}
+\newcommand{\cov}{\mathrm{Cov}}
+
+\allowdisplaybreaks[4] %允许多行公式跨页显示
+
+\input{Redefinition.tex} %导入定理类环境重定义文件(需要amssymb、ifthen宏包)
+
+%标题页设置
+\title{
+	有关矩阵和向量的导数
+}
+\author{王美庭\thanks{王美庭，暨南大学经济与社会研究院，Email: wangmeiting92@gmail.com}}
+\date{\today}
+
+
+
+%---------正文区-----------------
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\section{矩阵对实变量的导数}
+设矩阵\footnote{在本文的符号习惯中，未加粗的字符代表标量；加粗的小写字符代表向量；加粗的大写字符代表矩阵。}
+\[
+\mathbf{A}(t) =
+\begin{bmatrix}
+	a_{11}(t) & a_{12}(t) & \cdots & a_{1n}(t) \\
+	a_{21}(t) & a_{22}(t) & \cdots & a_{2n}(t) \\
+	\vdots & \vdots & & \vdots \\
+	a_{m1}(t) & a_{m2}(t) & \cdots & a_{mn}(t) \\
+\end{bmatrix}
+\]
+定义矩阵对实变量的导数：
+\[
+\frac{\diff \mathbf{A}(t)}{\diff t} =
+\begin{bmatrix}
+	\frac{\diff a_{11}(t)}{\diff t} & \frac{\diff a_{12}(t)}{\diff t} & \cdots & \frac{\diff a_{1n}(t)}{\diff t} \\
+	\frac{\diff a_{21}(t)}{\diff t} & \frac{\diff a_{22}(t)}{\diff t} & \cdots & \frac{\diff a_{2n}(t)}{\diff t} \\
+	\vdots & \vdots & & \vdots \\
+	\frac{\diff a_{m1}(t)}{\diff t} & \frac{\diff a_{m2}(t)}{\diff t} & \cdots & \frac{\diff a_{mn}(t)}{\diff t} \\
+\end{bmatrix}
+\]
+则其有如下性质：
+\begin{align}
+\frac{\diff \left[ \mathbf{A}(t) \pm \mathbf{B}(t) \right]}{\diff t} &= \frac{\diff \mathbf{A}(t)}{\diff t} \pm \frac{\diff \mathbf{B}(t)}{\diff t} \\
+\frac{\diff \left[ k(t) \mathbf{A}(t) \right]}{\diff t} &= \frac{\diff k(t)}{\diff t} \mathbf{A}(t) + k(t) \frac{\diff \mathbf{A}(t)}{\diff t} \\
+\frac{\diff \left[ k(t) \mathbf{A}(t) \right]}{\diff t} &= \frac{\diff k(t)}{\diff t} \mathbf{A}(t) + k(t) \frac{\diff \mathbf{A}(t)}{\diff t} \\
+\frac{\diff \left[ \mathbf{A}(t)\mathbf{B}(t) \right]}{\diff t} &= \frac{\mathbf{A}(t)}{\diff t} \mathbf{B}(t) + \mathbf{A}(t) \frac{\diff \mathbf{B}(t)}{\diff t} \\
+\frac{\diff \mathbf{A}^{-1}(t)}{\diff t} &= - \mathbf{A}^{-1}(t) \frac{\mathbf{A}(t)}{\diff t} \mathbf{A}^{-1}(t) \\
+\frac{\diff \mathbf{A}[t(x)]}{\diff x} &= \frac{\diff \mathbf{A}(t)}{\diff t} t^{\prime}(x) = t^{\prime}(x) \frac{\diff \mathbf{A}(t)}{\diff t} \\
+\frac{\diff\,(\mathrm{tr}\mathbf{A})}{\diff t} &= \mathrm{tr}\left( \frac{\diff\mathbf{A}}{\diff t} \right)
+\end{align}
+
+
+\section{数量函数对于向量的导数}
+设
+\[
+\mathbf{x} =
+\begin{bmatrix}
+x_1 \\ x_2 \\ \vdots \\ x_m
+\end{bmatrix}\quad
+\mathbf{y} =
+\begin{bmatrix}
+	y_1 \\ y_2 \\ \vdots \\ y_n
+\end{bmatrix}\quad
+\mathbf{A} =
+\begin{bmatrix}
+	a_{11} & a_{12} & \cdots & a_{1n} \\
+	a_{21} & a_{22} & \cdots & a_{2n} \\
+	\vdots & \vdots & & \vdots \\
+	a_{m1} & a_{m2} & \cdots & a_{mn} \\
+\end{bmatrix}
+\]
+定义数量函数 $ f $ 对向量的导数：
+\[
+\frac{\partial f}{\partial \mathbf{x}}
+= \begin{bmatrix}
+	\frac{\partial f}{\partial x_1} \\
+	\frac{\partial f}{\partial x_2} \\
+	\vdots \\
+	\frac{\partial f}{\partial x_m}
+\end{bmatrix}\quad
+\frac{\partial f}{\partial \mathbf{x}^{\mathrm{T}}} = \begin{bmatrix}
+	\frac{\partial f}{\partial x_1} &
+	\frac{\partial f}{\partial x_2} &
+	\cdots &
+	\frac{\partial f}{\partial x_m}
+\end{bmatrix}
+\]
+则其有如下性质：
+\begin{align}
+\frac{\partial \mathbf{a}^{\mathrm{T}} \mathbf{x}}{\partial \mathbf{x}} &= \mathbf{a} \\
+\frac{\partial(\mathbf{u}(\mathbf{x}) \cdot \mathbf{v}(\mathbf{x}))}{\partial \mathbf{x}^{\mathrm{T}}} &= \mathbf{u}^{\mathrm{T}}(\mathbf{x}) \frac{\partial \mathbf{v}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}+\mathbf{v}^{\mathrm{T}}(\mathbf{x})\frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} \\
+\frac{\partial(\mathbf{u}(\mathbf{x}) \cdot \mathbf{A} \mathbf{v}(\mathbf{x}))}{\partial \mathbf{x}^{\mathrm{T}}} &= \mathbf{u}^{\mathrm{T}}(\mathbf{x}) \mathbf{A} \frac{\partial \mathbf{v}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}+\mathbf{v}^{\mathrm{T}}(\mathbf{x}) \mathbf{A}^{\mathrm{T}} \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} \\
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{x}}{\partial \mathbf{x}} &= 2 \mathbf{x} \\
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A} \mathbf{x}}{\partial \mathbf{x}} &= \left(\mathbf{A}^{\mathrm{T}}+\mathbf{A}\right) \mathbf{x} \\
+\frac{\partial \mathbf{a}^{\mathrm{T}} \mathbf{x} \mathbf{x}^{\mathrm{T}} \mathbf{b}}{\partial \mathbf{x}} &= \left(\mathbf{a} \mathbf{b}^{\mathrm{T}}+\mathbf{b} \mathbf{a}^{\mathrm{T}}\right) \mathbf{x} \\
+\frac{\partial f\left[\mathbf{y}(\mathbf{x})\right]}{\partial \mathbf{x}} &= \frac{\partial \mathbf{y}^{\mathrm{T}}(\mathbf{x}) }{\partial \mathbf{x}} \frac{\partial f(\mathbf{y})}{\partial \mathbf{y}} \\
+\frac{\partial\mathbf{y}^{\mathrm{T}}(\mathbf{x}) \mathbf{A} \mathbf{y}(\mathbf{x})}{\partial \mathbf{x}}&=\frac{\partial\mathbf{y}^{\mathrm{T}}(\mathbf{x})}{\partial \mathbf{x}}\left(\mathbf{A}+\mathbf{A}^{\mathrm{T}}\right) \mathbf{y}(\mathbf{x}) \\
+\frac{\partial\mathbf{y}^{\mathrm{T}}(\mathbf{x}) \mathbf{A} \mathbf{z}(\mathbf{x})}{\partial \mathbf{x}}&=\frac{\partial \mathbf{y}^{\mathrm{T}}(\mathbf{x}) }{\partial \mathbf{x}} \mathbf{A} \mathbf{z}(\mathbf{x})+\frac{\partial \mathbf{z}^{\mathrm{T}}(\mathbf{x}) }{\partial \mathbf{x}} \mathbf{A}^{\mathrm{T}} \mathbf{y}(\mathbf{x}) \\
+\frac{\partial(\mathbf{a}-\mathbf{A} \mathbf{x})^{\mathrm{T}} \mathbf{B}(\mathbf{a}-\mathbf{A} \mathbf{x})}{\partial \mathbf{x}}&=-2 \mathbf{A}^{\mathrm{T}} \mathbf{B}(\mathbf{a}-\mathbf{A} \mathbf{x}) \\
+\frac{\partial \left[ c_{1} f(\mathbf{x})+c_{2} g(\mathbf{x}) \right] }{\partial \mathbf{x}} &= c_{1} \frac{\partial f(\mathbf{x})}{\partial \mathbf{x}}+c_{2} \frac{\partial g(\mathbf{x})}{\partial \mathbf{x}} \\
+\frac{\partial f(\mathbf{x}) g(\mathbf{x})}{\partial \mathbf{x}} &= f(\mathbf{x}) \frac{\partial g(\mathbf{x})}{\partial \mathbf{x}}+\frac{\partial f(\mathbf{x})}{\partial \mathbf{x}} g(\mathbf{x}) \\
+\frac{\partial \left[ f(\mathbf{x}) / g(\mathbf{x}) \right] }{\partial \mathbf{x}} &= \frac{1}{g^{2}(\mathbf{x})}\left[g(\mathbf{x}) \frac{\partial f(\mathbf{x})}{\partial \mathbf{x}}-f(\mathbf{x}) \frac{\partial g(\mathbf{x})}{\partial \mathbf{x}}\right] \\
+\frac{\partial g(u(\mathbf{x}))}{\partial \mathbf{x}} &= \frac{\partial g(u)}{\partial u} \frac{\partial u(\mathbf{x})}{\partial \mathbf{x}} \\
+\frac{\partial f(g(u(\mathbf{x})))}{\partial \mathbf{x}} &= \frac{\partial f(g)}{\partial g} \frac{\partial g(u)}{\partial u} \frac{\partial u(\mathbf{x})}{\partial \mathbf{x}}
+\end{align}
+
+
+\section{数量函数对于矩阵的导数}
+设
+\[
+\mathbf{x} =
+\begin{bmatrix}
+	x_1 \\ x_2 \\ \vdots \\ x_m
+\end{bmatrix}\quad
+\mathbf{y} =
+\begin{bmatrix}
+	y_1 \\ y_2 \\ \vdots \\ y_n
+\end{bmatrix}\quad
+\mathbf{A} =
+\begin{bmatrix}
+	a_{11} & a_{12} & \cdots & a_{1n} \\
+	a_{21} & a_{22} & \cdots & a_{2n} \\
+	\vdots & \vdots & & \vdots \\
+	a_{m1} & a_{m2} & \cdots & a_{mn} \\
+\end{bmatrix}
+\]
+定义数量函数 $ f $ 对矩阵的导数：
+\[
+\frac{\partial f}{\partial \mathbf{A}}
+= \begin{bmatrix}
+	\frac{\partial f}{\partial a_{11}} & \frac{\partial f}{\partial a_{12}} & \cdots & \frac{\partial f}{\partial a_{1n}} \\
+	\frac{\partial f}{\partial a_{21}} & \frac{\partial f}{\partial a_{22}} & \cdots & \frac{\partial f}{\partial a_{2n}} \\
+	\vdots & \vdots & & \vdots \\
+	\frac{\partial f}{\partial a_{m1}} & \frac{\partial f}{\partial a_{m2}} & \cdots & \frac{\partial f}{\partial a_{mn}} \\
+\end{bmatrix}
+\]
+则其有如下性质：
+\begin{align}
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A} \mathbf{y}}{\partial \mathbf{A}} &= \mathbf{x y}^{\mathrm{T}} \\
+\frac{\partial \mathbf{y}^{\mathrm{T}} \mathbf{A}^{\mathrm{T}} \mathbf{A} \mathbf{y}}{\partial \mathbf{A}} &= 2 \mathbf{A} \mathbf{y} \mathbf{y}^{\mathrm{T}} \\
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A}^{-1} \mathbf{y}}{\partial \mathbf{A}}&=-\mathbf{A}^{-\mathrm{T}} \mathbf{x} \mathbf{y}^{\mathrm{T}} \mathbf{A}^{-\mathrm{T}} \\
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A}^{\mathrm{T}} \mathbf{A} \mathbf{y}}{\partial \mathbf{A}}&=\mathbf{A}\left(\mathbf{x} \mathbf{y}^{\mathrm{T}}+\mathbf{y} \mathbf{x}^{\mathrm{T}}\right) \\
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A} \mathbf{A}^{\mathrm{T}} \mathbf{y}}{\partial \mathbf{A}}&=\left(\mathbf{x} \mathbf{y}^{\mathrm{T}}+\mathbf{y} \mathbf{x}^{\mathrm{T}}\right) \mathbf{A} \\
+z&=f(\mathbf{Y}), \mathbf{Y}=\mathbf{A} \mathbf{X}+\mathbf{B} \implies \frac{\partial z}{\partial \mathbf{X}}=\mathbf{A}^{\mathrm{T}} \frac{\partial z}{\partial \mathbf{Y}} \\
+z&=f(\mathbf{Y}), \mathbf{Y}=\mathbf{X} \mathbf{A}+\mathbf{B} \Longrightarrow \frac{\partial z}{\partial \mathbf{X}}=\frac{\partial z}{\partial \mathbf{Y}} \mathbf{A}^{\mathrm{T}} \\
+\frac{\partial\left[c_{1} f(\mathbf{A})+c_{2} g(\mathbf{A})\right]}{\partial \mathbf{A}}&=c_{1} \frac{\partial f(\mathbf{A})}{\partial \mathbf{A}}+c_{2} \frac{\partial g(\mathbf{A})}{\partial \mathbf{A}} \\
+\frac{\partial f(\mathbf{A}) g(\mathbf{A})}{\partial \mathbf{A}}&=g(\mathbf{A}) \frac{\partial f(\mathbf{A})}{\partial \mathbf{A}}+f(\mathbf{A}) \frac{\partial g(\mathbf{A})}{\partial \mathbf{A}} \\
+\frac{\partial \left[ f(\mathbf{A}) / g(\mathbf{A}) \right] }{\partial \mathbf{A}}&=\frac{1}{g^{2}(\mathbf{A})}\left[g(\mathbf{A}) \frac{\partial f(\mathbf{A})}{\partial \mathbf{A}}-f(\mathbf{A}) \frac{\partial g(\mathbf{A})}{\partial \mathbf{A}}\right] \\
+\frac{\partial f(g(\mathbf{A}))}{\partial \mathbf{A}}&=\frac{\partial f}{\partial g} \frac{\partial g(\mathbf{A})}{\partial \mathbf{A}}
+\end{align}
+
+\subsection{矩阵的迹对于矩阵的导数}
+矩阵的迹对于矩阵的导数有如下性质：
+\begin{align}
+\frac{\partial \operatorname{tr}(\mathbf{W})}{\partial \mathbf{W}}&=\mathbf{I} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{W}^{-1}\right)}{\partial \mathbf{W}} &= - \mathbf{W}^{-\mathrm{T}} \\
+\frac{\partial \operatorname{tr}(\mathbf{W} \mathbf{A})}{\partial \mathbf{W}}&=\frac{\partial \operatorname{tr}(\mathbf{A} \mathbf{W})}{\partial \mathbf{W}}=\mathbf{A}^{\mathrm{T}} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{W}^{\mathrm{T}} \mathbf{A}\right)}{\partial \mathbf{W}}&=\frac{\partial \operatorname{tr}\left(\mathbf{A} \mathbf{W}^{\mathrm{T}}\right)}{\partial \mathbf{W}}=\mathbf{A} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{W} \mathbf{W}^{\mathrm{T}}\right)}{\partial \mathbf{W}}&=\frac{\partial \operatorname{tr}\left(\mathbf{W}^{\mathrm{T}} \mathbf{W}\right)}{\partial \mathbf{W}}=2 \mathbf{W} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{W}^{2}\right)}{\partial \mathbf{W}}&=\frac{\partial \operatorname{tr}(\mathbf{W} \mathbf{W})}{\partial \mathbf{W}}=2 \mathbf{W}^{\mathrm{T}} \\
+\frac{\operatorname{tr}\left(\mathbf{A} \mathbf{W}^{-1}\right)}{\partial \mathbf{W}}&=-\left(\mathbf{W}^{-1} \mathbf{A} \mathbf{W}^{-1}\right)^{\mathrm{T}} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{W}^{\mathrm{T}} \mathbf{A} \mathbf{W}\right)}{\partial \mathbf{W}}&=\left(\mathbf{A}+\mathbf{A}^{\mathrm{T}}\right) \mathbf{W} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{W} \mathbf{A} \mathbf{W}^{\mathrm{T}}\right)}{\partial \mathbf{W}}&=\mathbf{W}\left(\mathbf{A}+\mathbf{A}^{T}\right) \\
+\frac{\partial \operatorname{tr}\left(\mathbf{A} \mathbf{W}^{-1} \mathbf{B}\right)}{\partial \mathbf{W}}&=-\left(\mathbf{W}^{-1} \mathbf{B} \mathbf{A} \mathbf{W}^{-1}\right)^{\mathrm{T}} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{A} \mathbf{W} \mathbf{W}^{\mathrm{T}} \mathbf{A}^{\mathrm{T}}\right)}{\partial \mathbf{W}}&=2 \mathbf{A}^{\mathrm{T}} \mathbf{A} \mathbf{W} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{A} \mathbf{W}^{\mathrm{T}} \mathbf{W} \mathbf{A}^{\mathrm{T}}\right)}{\partial \mathbf{W}}&=2 \mathbf{W} \mathbf{A}^{\mathrm{T}} \mathbf{A} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{A} \mathbf{W} \mathbf{W}^{\mathrm{T}} \mathbf{B}\right)}{\partial \mathbf{W}}&=\left(\mathbf{B} \mathbf{A}+\mathbf{A}^{\mathrm{T}} \mathbf{B}^{\mathrm{T}}\right) \mathbf{W} \\
+\frac{\partial \operatorname{tr}\left(\mathbf{A} \mathbf{W}^{\mathrm{T}} \mathbf{W} \mathbf{B}\right)}{\partial \mathbf{W}}&=\mathbf{W}\left(\mathbf{B} \mathbf{A}+\mathbf{A}^{\mathrm{T}} \mathbf{B}^{\mathrm{T}}\right) \\
+\frac{\partial \operatorname{tr}\left(\mathbf{W A}^{\mathrm{T}} \mathbf{W}^{\mathrm{T}} \mathbf{B}\right)}{\partial \mathbf{W}}&=\mathbf{B} \mathbf{W} \mathbf{A}+\mathbf{B}^{\mathrm{T}} \mathbf{W} \mathbf{A}^{\mathrm{T}} \\
+\frac{\partial \operatorname{tr}(\mathbf{W} \mathbf{A} \mathbf{W} \mathbf{B})}{\partial \mathbf{W}}&=\mathbf{B}^{\mathrm{T}} \mathbf{W}^{\mathrm{T}} \mathbf{A}^{\mathrm{T}}+\mathbf{A}^{\mathrm{T}} \mathbf{W}^{\mathrm{T}} \mathbf{B}^{\mathrm{T}}
+\end{align}
+
+\subsection{矩阵的行列式对于矩阵的导数}
+矩阵的行列式对于矩阵的导数有如下性质：
+\begin{align}
+\frac{\partial|\mathbf{W}|}{\partial \mathbf{W}} &= |\mathbf{W}| \mathbf{W}^{-\mathrm{T}} \\
+\frac{\partial\left|\mathbf{W}^{-1}\right|}{\partial \mathbf{W}}&=-|\mathbf{W}|^{-1}\mathbf{W}^{-\mathrm{T}} \\
+\frac{\partial \ln |\mathbf{W}|}{\partial \mathbf{W}} &=\frac{1}{|\mathbf{W}|} \frac{\partial|\mathbf{W}|}{\partial \mathbf{W}} = \mathbf{W}^{-\mathrm{T}} \\
+\frac{\partial\left|\mathbf{W}^{k}\right|}{\partial \mathbf{W}} &= k\left|\mathbf{W}^{k}\right| \mathbf{W}^{-\mathrm{T}} \\
+\frac{\partial\left|\mathbf{W} \mathbf{W}^{\mathrm{T}}\right|}{\partial \mathbf{W}}&=2\left|\mathbf{W} \mathbf{W}^{\mathrm{T}}\right|\left(\mathbf{W} \mathbf{W}^{\mathrm{T}}\right)^{-1} \mathbf{W} \\
+\frac{\partial\left|\mathbf{W}^{\mathrm{T}} \mathbf{W}\right|}{\partial \mathbf{W}}&=2\left|\mathbf{W}^{\mathrm{T}} \mathbf{W}\right| \mathbf{W}\left(\mathbf{W}^{\mathrm{T}} \mathbf{W}\right)^{-1} \\
+\frac{\partial\left|\mathbf{W}^{2}\right|}{\partial \mathbf{W}}&=\mathbf{2}|\mathbf{W}|^{2} \mathbf{W}^{-\mathrm{T}} \\
+\frac{\partial|\mathbf{A} \mathbf{W} \mathbf{B}|}{\partial \mathbf{W}}&=|\mathbf{A} \mathbf{W} \mathbf{B}| \mathbf{A}^{\mathrm{T}}\left(\mathbf{B}^{\mathrm{T}} \mathbf{W}^{\mathrm{T}} \mathbf{A}^{\mathrm{T}}\right)^{-1} \mathbf{B}^{\mathrm{T}} \\
+\frac{\partial\left|\mathbf{W}^{\mathrm{T}} \mathbf{A} \mathbf{W}\right|}{\partial \mathbf{W}}&=2 \mathbf{A} \mathbf{W}\left(\mathbf{W}^{\mathrm{T}} \mathbf{A} \mathbf{W}\right)^{-1} \\
+\frac{\partial\left|\mathbf{W} \mathbf{A} \mathbf{W}^{\mathrm{T}}\right|}{\partial \mathbf{W}}&=\left(\mathbf{W} \mathbf{A} \mathbf{W}^{\mathrm{T}}\right)^{-\mathrm{T}} \mathbf{W}\left(\mathbf{A}^{\mathrm{T}}+\mathbf{A}\right)
+\end{align}
+
+
+\section{向量对于向量的导数}
+设
+\[
+\mathbf{x} =
+\begin{bmatrix}
+	x_1 \\ x_2 \\ \vdots \\ x_m
+\end{bmatrix}\quad
+\mathbf{y} =
+\begin{bmatrix}
+	y_1 \\ y_2 \\ \vdots \\ y_n
+\end{bmatrix}
+\]
+定义向量对向量的导数：
+\[
+\frac{\partial\mathbf{y}}{\partial\mathbf{x}}
+= \begin{bmatrix}
+	\frac{\partial \mathbf{y}}{\partial x_1} \\
+	\frac{\partial \mathbf{y}}{\partial x_2} \\
+	\vdots \\
+	\frac{\partial \mathbf{y}}{\partial x_m}
+\end{bmatrix}\quad
+\frac{\partial\mathbf{y}}{\partial\mathbf{x}^{\mathrm{T}}}
+= \begin{bmatrix}
+	\frac{\partial \mathbf{y}}{\partial x_1} &
+	\frac{\partial \mathbf{y}}{\partial x_2} &
+	\cdots &
+	\frac{\partial \mathbf{y}}{\partial x_m}
+\end{bmatrix}
+\]
+则其有如下性质：
+\begin{align}
+\frac{\partial \mathbf{A} \mathbf{x}}{\partial \mathbf{x}^{\mathrm{T}}} &= \mathbf{A} \\
+\left[\frac{\partial \mathbf{y}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}\right]^{\mathrm{T}} &= \frac{\partial \mathbf{y}^{\mathrm{T}}(\mathbf{x})}{\partial \mathbf{x}} \\
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A}}{\partial \mathbf{x}} &= \mathbf{A} \\
+\frac{\partial \mathbf{x}^{\mathrm{T}}}{\partial \mathbf{x}} &= \frac{\partial \mathbf{x}}{\partial \mathbf{x}^{\mathrm{T}}} = \mathbf{I} \\
+\frac{\partial v(\mathbf{x}) \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} &= v(\mathbf{x}) \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}+\mathbf{u}(\mathbf{x}) \frac{\partial v(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} \\
+\frac{ \partial \left[ \mathbf{u}(\mathbf{x})+\mathbf{v}(\mathbf{x}) \right] }{\partial \mathbf{x}} &= \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}}+\frac{\partial \mathbf{v}(\mathbf{x})}{\partial \mathbf{x}} \\
+\frac{\partial \mathbf{g}(\mathbf{u}(\mathbf{x}))}{\partial \mathbf{x}^{\mathrm{T}}} &= \frac{\partial \mathbf{g}(\mathbf{u})}{\partial \mathbf{u}^{\mathrm{T}}} \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} \\
+\frac{\partial \mathbf{g}(\mathbf{u}(\mathbf{x}), \mathbf{v}(\mathbf{x}))}{\partial \mathbf{x}^{\mathrm{T}}}&=\frac{\partial \mathbf{g}(\mathbf{u}, \mathbf{v})}{\partial \mathbf{u}^{\mathrm{T}}} \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}+\frac{\partial \mathbf{g}(\mathbf{u}, \mathbf{v})}{\partial \mathbf{v}^{\mathrm{T}}} \frac{\partial \mathbf{v}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} \\
+\frac{\partial \bm{f}(\mathbf{g}(\mathbf{u}(\mathbf{x})))}{\partial \mathbf{x}^{\mathrm{T}}}&=\frac{\partial \bm{f}(\mathbf{g})}{\partial \mathbf{g}^{\mathrm{T}}} \frac{\partial \mathbf{g}(\mathbf{u})}{\partial \mathbf{u}^{\mathrm{T}}} \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} \\
+\frac{\partial \mathbf{A} \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}&=\frac{\partial \mathbf{A} \mathbf{u}}{\partial \mathbf{u}^{\mathrm{T}}} \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}=\mathbf{A} \frac{\partial \mathbf{u}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}}
+\end{align}
+
+
+\section{向量对于矩阵的导数}
+设
+\[
+\mathbf{x} =
+\begin{bmatrix}
+	x_1 \\ x_2 \\ \vdots \\ x_m
+\end{bmatrix}\quad
+\mathbf{y} =
+\begin{bmatrix}
+	y_1 \\ y_2 \\ \vdots \\ y_n
+\end{bmatrix}\quad
+\mathbf{A} =
+\begin{bmatrix}
+	a_{11} & a_{12} & \cdots & a_{1n} \\
+	a_{21} & a_{22} & \cdots & a_{2n} \\
+	\vdots & \vdots & & \vdots \\
+	a_{m1} & a_{m2} & \cdots & a_{mn} \\
+\end{bmatrix}
+\]
+定义向量对于矩阵的导数：
+\[
+\frac{\partial\mathbf{x}}{\partial\mathbf{A}}
+= \begin{bmatrix}
+	\frac{\partial \mathbf{x}}{\partial a_{11}} & \frac{\partial \mathbf{x}}{\partial a_{12}} & \cdots & \frac{\partial \mathbf{x}}{\partial a_{1n}} \\
+	\frac{\partial \mathbf{x}}{\partial a_{21}} & \frac{\partial \mathbf{x}}{\partial a_{22}} & \cdots & \frac{\partial \mathbf{x}}{\partial a_{2n}} \\
+	\vdots & \vdots & \ddots & \vdots \\
+	\frac{\partial \mathbf{x}}{\partial a_{m1}} & \frac{\partial \mathbf{x}}{\partial a_{m2}} & \cdots & \frac{\partial \mathbf{x}}{\partial a_{mn}}
+\end{bmatrix}
+\]
+则其有如下性质：
+\begin{align}
+\frac{\partial \mathbf{A} \mathbf{y}}{\partial \mathbf{A}^{\mathrm{T}}}&=\mathbf{y} \otimes \mathbf{I} \\
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A}}{\partial \mathbf{A}^{\mathrm{T}}} &= \mathbf{x}^{\mathrm{T}} \otimes \mathbf{I}
+\end{align}
+
+
+\section{矩阵对于矩阵的导数}
+设
+\[
+\mathbf{A} =
+\begin{bmatrix}
+	a_{11} & a_{12} & \cdots & a_{1n} \\
+	a_{21} & a_{22} & \cdots & a_{2n} \\
+	\vdots & \vdots & & \vdots \\
+	a_{m1} & a_{m2} & \cdots & a_{mn} \\
+\end{bmatrix}\quad
+\mathbf{B} =
+\begin{bmatrix}
+	b_{11} & b_{12} & \cdots & b_{1n} \\
+	b_{21} & b_{22} & \cdots & b_{2n} \\
+	\vdots & \vdots & & \vdots \\
+	b_{m1} & b_{m2} & \cdots & b_{mn} \\
+\end{bmatrix}
+\]
+定义矩阵对于矩阵的导数如下：
+\[
+\frac{\partial\mathbf{A}}{\partial\mathbf{B}} =
+\begin{bmatrix}
+	\frac{\partial \mathbf{A}}{\partial b_{11}} & \frac{\partial \mathbf{A}}{\partial b_{12}} & \cdots & \frac{\partial \mathbf{A}}{\partial b_{1n}} \\
+	\frac{\partial \mathbf{A}}{\partial b_{21}} & \frac{\partial \mathbf{A}}{\partial b_{22}} & \cdots & \frac{\partial \mathbf{A}}{\partial b_{2n}} \\
+	\vdots & \vdots & \ddots & \vdots \\
+	\frac{\partial \mathbf{A}}{\partial b_{m1}} & \frac{\partial \mathbf{A}}{\partial b_{m2}} & \cdots & \frac{\partial \mathbf{A}}{\partial b_{mn}}
+\end{bmatrix}
+\]
+则其有如下性质：
+\begin{align}
+\frac{\partial \left[ \mathbf{A}(\mathbf{X})+\mathbf{B}(\mathbf{X}) \right] }{\partial \mathbf{X}}&=\frac{\partial \mathbf{A}(\mathbf{X})}{\partial \mathbf{X}}+\frac{\partial \mathbf{B}(\mathbf{X})}{\partial \mathbf{X}}
+\end{align}
+
+
+\section{Hessian 矩阵}
+设
+\[
+\mathbf{x} =
+\begin{bmatrix}
+	x_1 \\ x_2 \\ \vdots \\ x_m
+\end{bmatrix}
+\]
+定义 Hessian 矩阵：
+\[
+\frac{\partial^{2} f(\mathbf{x})}{\partial \mathbf{x} \partial \mathbf{x}^{\mathrm{T}}}=\frac{\partial}{\partial \mathbf{x}^{\mathrm{T}}}\left[\frac{\partial f(\mathbf{x})}{\partial \mathbf{x}}\right] =
+\begin{bmatrix}
+	\frac{\partial^{2} f}{\partial x_{1}^{2}} & \frac{\partial^{2} f}{\partial x_{1} \partial x_{2}} & \cdots & \frac{\partial^{2} f}{\partial x_{1} \partial x_{m}} \\
+	\frac{\partial^{2} f}{\partial x_{2} \partial x_{1}} & \frac{\partial^{2} f}{\partial x_{2}^{2}} & \cdots & \frac{\partial^{2} f}{\partial x_{2} \partial x_{m}} \\
+	\vdots & \vdots & & \vdots \\
+	\frac{\partial^{2} f}{\partial x_{m} \partial x_{1}} & \frac{\partial^{2} f}{\partial x_{m} \partial x_{2}} & \cdots & \frac{\partial^{2} f}{\partial x_{m}^{2}}
+\end{bmatrix}
+\]
+则其有如下性质：
+\begin{alignat}{2}
+\frac{\partial^{2} \mathbf{a}^{\mathrm{T}} \mathbf{x}}{\partial \mathbf{x} \partial \mathbf{x}^{\mathrm{T}}}&=&&\mathbf{0} \\
+\frac{\partial^{2} \mathbf{x}^{\mathrm{T}} \mathbf{A} \mathbf{x}}{\partial \mathbf{x} \partial \mathbf{x}^{\mathrm{T}}} &=&&\mathbf{A}^{\mathrm{T}}+\mathbf{A} \\
+\frac{\partial^{2}(\mathbf{a}-\mathbf{A} \mathbf{x})^{\mathrm{T}} \mathbf{B}(\mathbf{a}-\mathbf{A} \mathbf{x})}{\partial \mathbf{x} \partial \mathbf{x}^{\mathrm{T}}}&=&&2 \mathbf{A}^{\mathrm{T}} \mathbf{B} \mathbf{A} \\
+\frac{\partial^{2}\mathbf{y}^{\mathrm{T}}(\mathbf{x}) \mathbf{A} \mathbf{y}(\mathbf{x})}{\partial \mathbf{x} \partial \mathbf{x}^{\mathrm{T}}} &=&&\frac{\partial\mathbf{y}^{\mathrm{T}}(\mathbf{x})}{\partial \mathbf{x}}\left(\mathbf{A}+\mathbf{A}^{\mathrm{T}}\right) \frac{\partial \mathbf{y}(\mathbf{x})}{\partial \mathbf{x}^{\mathrm{T}}} + \notag \\
+&&&\left[\mathbf{y}^{\mathrm{T}}(\mathbf{x})\left(\mathbf{A}+\mathbf{A}^{\mathrm{T}}\right) \otimes \mathbf{I}_{m}\right] \frac{\partial}{\partial \mathbf{x}^{\mathrm{T}}}\left\{\operatorname{vec}\left[\frac{\partial\mathbf{y}^{\mathrm{T}}(\mathbf{x})}{\partial \mathbf{x}}\right]\right\}
+\end{alignat}
+
+
+\section{拓展：矩阵的微分与其导数的关系}
+\subsection{矩阵微分的常见性质}
+\begin{align}
+\diff\mathbf{A}&=\mathbf{0} \\
+\diff\,(\alpha \mathbf{U})&=\alpha \diff \mathbf{U} \\
+\diff\,(\mathbf{U} \pm \mathbf{V})&=\diff \mathbf{U} \pm \diff \mathbf{V} \\
+\diff\,(\mathbf{UV})&=(\diff \mathbf{U}) \mathbf{V}+\mathbf{U}(\diff \mathbf{V}) \\
+\diff\,(\mathbf{UVW})&=(\diff \mathbf{U}) \mathbf{VW}+\mathbf{U}(\diff \mathbf{V}) \mathbf{W} + \mathbf{UV}(\diff \mathbf{W}) \\
+\diff\,(\mathbf{U} \otimes \mathbf{V})&=(\diff \mathbf{U}) \otimes \mathbf{V}+\mathbf{U} \otimes \diff \mathbf{V} \\
+\diff\,(\mathbf{U} \odot \mathbf{V})&=(\diff \mathbf{U}) \odot \mathbf{V}+\mathbf{U} \odot \diff \mathbf{V} \\
+\diff\,(\operatorname{vec}(\mathbf{U}))&=\operatorname{vec}(\diff \mathbf{U}) \\
+\diff|\mathbf{X}|&=|\mathbf{X}| \operatorname{tr}\left(\mathbf{X}^{-1} \diff \mathbf{X}\right) \\
+\diff\left(\mathbf{X}^{-1}\right)&=-\mathbf{X}^{-1}(\diff \mathbf{X}) \mathbf{X}^{-1}
+\end{align}
+
+\subsection{矩阵的数量函数与其微分的关系}
+
+\begin{lemma}\label{lem:differential}%
+若矩阵的数量函数 $ f(\mathbf{X}) $ 在 $ m\times n $ 矩阵点 $ \mathbf{X} $ 可微分，则下列关系成立：
+\begin{gather*}
+\diff f(\mathbf{X})=\mathbf{A} \diff \mathbf{X} \iff \nabla f(\mathbf{X})=\frac{\partial f(\mathbf{X})}{\partial \mathbf{X}}=\mathbf{A}^{\mathrm{T}} \\
+\diff f(\mathbf{X})=\operatorname{tr}(\mathbf{A} \diff \mathbf{X}) \iff \nabla f(\mathbf{X})=\frac{\partial f(\mathbf{X})}{\partial \mathbf{X}}=\mathbf{A}^{\mathrm{T}}
+\end{gather*}
+式中, $\mathbf{A}$ 有可能与变元矩阵 $\mathbf{X}$ 有关。
+\end{lemma}
+
+由此我们可以推导前面数量函数对于向量或矩阵的导数的结论。下面给出几个例子：
+
+\begin{exam}
+用数量函数的微分形式，证明
+\[
+\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A} \mathbf{x}}{\partial \mathbf{x}}=\left(\mathbf{A}+\mathbf{A}^{\mathbf{T}}\right) \mathbf{x}
+\]
+\end{exam}
+
+\begin{proof}
+依据
+\[
+\diff\,(\mathbf{UVW})=(\diff \mathbf{U}) \mathbf{VW}+\mathbf{U}(\diff \mathbf{V}) \mathbf{W} + \mathbf{UV}(\diff \mathbf{W}) \\
+\]
+我们有
+\begin{align*}
+\diff\left(\mathbf{x}^{\mathrm{T}} \mathbf{A} \mathbf{x}\right)&=(\diff \mathbf{x})^{\mathrm{T}} \mathbf{A} \mathbf{x}+\mathbf{x}^{\mathrm{T}} \mathbf{A} \diff \mathbf{x} \\
+&= \mathbf{x}^{\mathrm{T}} \mathbf{A}^{\mathrm{T}} \diff\mathbf{x}+\mathbf{x}^{\mathrm{T}} \mathbf{A} \diff \mathbf{x} \\
+&= \mathbf{x}^{\mathrm{T}}\left(\mathbf{A}+\mathbf{A}^{\mathrm{T}}\right) \diff \mathbf{x}
+\end{align*}
+依据引理 \ref{lem:differential} 可得
+\[
+\nabla\left(\mathbf{x}^{\mathbf{T}} \mathbf{A} \mathbf{x}\right)=\frac{\partial \mathbf{x}^{\mathrm{T}} \mathbf{A} \mathbf{x}}{\partial \mathbf{x}} = \left[ \mathbf{x}^{\mathrm{T}}\left(\mathbf{A}+\mathbf{A}^{\mathrm{T}}\right) \right]^{\mathrm{T}} = \left(\mathbf{A}+\mathbf{A}^{\mathbf{T}}\right) \mathbf{x}
+\]
+证毕。
+\end{proof}
+
+\begin{exam}
+用数量函数的微分形式，证明
+\[
+\frac{\partial \operatorname{tr}\left(\mathbf{X}^{\mathrm{T}} \mathbf{A} \mathbf{X}\right)}{\partial \mathbf{X}}=\left(\mathbf{A} + \mathbf{A}^{\mathrm{T}}\right) \mathbf{X}
+\]
+\end{exam}
+
+\begin{proof}
+\begin{align*}
+	\diff\,\operatorname{tr}\left(\mathbf{X}^{\mathrm{T}} \mathbf{A} \mathbf{X}\right) &= \operatorname{tr}\left[ \diff\left( \mathbf{X}^{\mathrm{T}} \mathbf{A} \mathbf{X} \right) \right] \\
+	&= \operatorname{tr}\left[ (\diff\mathbf{X})^{\mathrm{T}}\mathbf{AX} + \mathbf{X}^{\mathrm{T}} \mathbf{A} \diff\mathbf{X} \right] \\
+	&= \operatorname{tr}\left[ (\diff\mathbf{X})^{\mathrm{T}}\mathbf{AX} \right] + \operatorname{tr}\left[ \mathbf{X}^{\mathrm{T}} \mathbf{A} \diff\mathbf{X} \right] \\
+	&= \operatorname{tr}\left[ \mathbf{X}^{\mathrm{T}} \mathbf{A}^{\mathrm{T}} \diff\mathbf{X} \right] + \operatorname{tr}\left[ \mathbf{X}^{\mathrm{T}} \mathbf{A} \diff\mathbf{X} \right] \\
+	&= \operatorname{tr}\left[ \mathbf{X}^{\mathrm{T}} \left( \mathbf{A} + \mathbf{A}^{\mathrm{T}} \right) \diff\mathbf{X} \right]
+\end{align*}
+依据引理 \ref{lem:differential} 可得
+\[
+\nabla\left[ \operatorname{tr}\left(\mathbf{X}^{\mathrm{T}} \mathbf{A} \mathbf{X}\right) \right] = \frac{\partial \operatorname{tr}\left(\mathbf{X}^{\mathrm{T}} \mathbf{A} \mathbf{X}\right)}{\partial \mathbf{X}} = \left[ \mathbf{X}^{\mathrm{T}} \left( \mathbf{A} + \mathbf{A}^{\mathrm{T}} \right) \right]^{\mathrm{T}} = \left( \mathbf{A} + \mathbf{A}^{\mathrm{T}} \right) \mathbf{X}
+\]
+证毕。
+\end{proof}
+
+\begin{exam}
+用数量函数的微分形式，证明
+\[
+\frac{\partial\left|\mathbf{X}^{\mathrm{T}} \mathbf{X}\right|}{\partial \mathbf{X}}=2\left|\mathbf{X}^{\mathrm{T}} \mathbf{X}\right| \mathbf{X}\left(\mathbf{X}^{\mathrm{T}} \mathbf{X}\right)^{-1}
+\]
+\end{exam}
+
+\begin{proof}
+\begin{align*}
+	\diff \left| \mathbf{X}^{\mathrm{T}}\mathbf{X} \right|
+	&= \left| \mathbf{X}^{\mathrm{T}}\mathbf{X} \right| \operatorname{tr} \left[ \left( \mathbf{X}^{\mathrm{T}}\mathbf{X} \right)^{-1} \diff\left( \mathbf{X}^{\mathrm{T}}\mathbf{X} \right) \right] \\
+	&= \left| \mathbf{X}^{\mathrm{T}}\mathbf{X} \right| \operatorname{tr} \left[ \left( \mathbf{X}^{\mathrm{T}}\mathbf{X} \right)^{-1} \left(\diff\mathbf{X}\right)^{\mathrm{T}} \mathbf{X} + \left( \mathbf{X}^{\mathrm{T}}\mathbf{X} \right)^{-1} \mathbf{X}^{\mathrm{T}} \diff\mathbf{X} \right] \\
+	&= \operatorname{tr} \left[ 2\left| \mathbf{X}^{\mathrm{T}}\mathbf{X} \right| \left( \mathbf{X}^{\mathrm{T}}\mathbf{X} \right)^{-1} \mathbf{X}^{\mathrm{T}} \diff\mathbf{X} \right]
+\end{align*}
+依据引理 \ref{lem:differential} 可得
+\[
+\nabla \left| \mathbf{X}^{\mathrm{T}}\mathbf{X} \right|
+= \frac{\partial\left|\mathbf{X}^{\mathrm{T}} \mathbf{X}\right|}{\partial \mathbf{X}}
+= \left[ 2\left| \mathbf{X}^{\mathrm{T}}\mathbf{X} \right| \left( \mathbf{X}^{\mathrm{T}}\mathbf{X} \right)^{-1} \mathbf{X}^{\mathrm{T}} \right]^{\mathrm{T}}
+=2\left|\mathbf{X}^{\mathrm{T}} \mathbf{X}\right| \mathbf{X}\left(\mathbf{X}^{\mathrm{T}} \mathbf{X}\right)^{-1}
+\]
+以上系列方程使用了以下性质：
+\begin{gather*}
+\operatorname{tr}(\mathbf{AB})=\operatorname{tr}(\mathbf{BA}) \\
+\operatorname{tr}\left(\mathbf{A}^{\mathrm{T}} \mathbf{B}\right)=\operatorname{tr}\left(\mathbf{B}^{\mathrm{T}} \mathbf{A}\right) \\
+\left[\left( \mathbf{X}^{\mathrm{T}}\mathbf{X} \right)^{-1}\right]^{\mathrm{T}}=\left[\left(\mathbf{X}^{\mathrm{T}}\mathbf{X}\right)^{\mathrm{T}}\right]^{-1}= \left(\mathbf{X}^{\mathrm{T}}\mathbf{X}\right)^{-\mathrm{T}} =\left(\mathbf{X}^{\mathrm{T}}\mathbf{X}\right)^{-1}
+\end{gather*}
+证毕。
+\end{proof}
+
+
+\section{参考资料}
+\setlength{\parindent}{0em}
+[1] 张贤达. 矩阵分析与应用[M]. 清华大学出版社有限公司, 2004.
+
+\hangindent = 1.45em \hangafter = 1
+[2] Petersen K B, Pedersen M S. The matrix cookbook (version: November 15, 2012)[J]. 2012.
+
+[3] 印象笔记：矩阵向量求导
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
